@@ -1,0 +1,128 @@
+<main id="main" style="margin-top: 20px">
+
+  <!-- ====== Truện nổi bật ======= -->
+  <section id="popular-courses" class="courses">
+    <div class="container" data-aos="fade-up">
+
+      <div class="section-title" style="display: flex;justify-content: space-between">
+        <h4 style="color: #5fcf80">SÁCH KHUYẾN MÃI</h4>
+        <div class="selectList">
+          <div class="dropdown">
+            <button style="background: #5fcf80;" type="button" class="btn btn-outline-danger dropdown-toggle" data-bs-toggle="dropdown">
+              Chọn sách
+            </button>
+            <ul class="dropdown-menu">
+              <li><a routerLink="/listNewBook" class="dropdown-item" href="#">Sách mới nhất</a></li>
+              <li><a routerLink="/listHotBook" class="dropdown-item" href="#">Sách bán chạy nhất</a></li>
+              <li><a routerLink="/listBookSale" class="dropdown-item" href="#">Sách giá mệnh giá dưới 100.000đ</a></li>
+              <li><a routerLink="/listPreview" class="dropdown-item" href="#">Sách phổ biến</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!--              test-->
+        <div class="col-md-2 col-sm-6" *ngFor="let book of bookList">
+          <div class="product-grid">
+            <div class="product-image">
+              <a [routerLink]="['/detail', book.id]" class="image">
+                <img class="pic-1" style="height: 250px"
+                     src="{{book.image}}">
+              </a>
+              <!--                    <span style="background-color: #5fcf80" class="product-sale-label">-{{book.discount.name}}</span>-->
+              <ul class="social">
+                <li><a [routerLink]="['/detail', book.id]" data-tip="Quick View">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                       class="bi bi-eye" viewBox="0 0 16 16">
+                    <path
+                      d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                    <path
+                      d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                  </svg>
+                </a></li>
+                <li><a *ngIf="['ROLE_ADMIN'].indexOf(role)!==-1" [routerLink]="['/edit', book.id]" data-tip="Add to wishlist">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                  </svg>
+                </a></li>
+                <li><a *ngIf="['ROLE_ADMIN'].indexOf(role)!==-1" data-bs-toggle="modal" (click)="deleteBook(book)"  data-tip="Add to wishlist" data-bs-target="#exampleModal">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                  </svg>
+                </a></li>
+                <li><a *ngIf="['ROLE_USER'].indexOf(role)!==-1" data-tip="Add to wishlist">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                       class="bi bi-cart-dash" viewBox="0 0 16 16">
+                    <path d="M6.5 7a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4z"/>
+                    <path
+                      d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                  </svg>
+                </a></li>
+              </ul>
+            </div>
+            <div style="background-color: #f1f1f1; height: 100px" class="product-content">
+              <h5 style="color: #5fcf80;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><a href="#">{{book.name}}</a></h5>
+              <div style="display: flex;justify-content: space-around;">
+                <div class="price__cost" style="text-decoration: line-through;">
+                  {{addCurrencySymbol(book.price/book.sale*100)}}
+                </div>
+                <div class="price__sale" style="color: red">
+                  {{addCurrencySymbol(Number(book.price))}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div></div>
+
+      <div style="height: 50px;position: relative" class="container pagination-advertisement text-center mb-5">
+        <ul class="pagination justify-content-center" style="text-align: center">
+          <li>
+          <li style="margin-top: 20px;" class="page-item">
+            <span style="margin: 0 20px 0 20px">{{pageSize * indexPagination + 1}}
+              - {{pageSize * indexPagination + numberOfElement}} / {{totalElements}}</span>
+            <button (click)="previousPage($event)" [ngStyle]="{'display':previousPageStyle}" type="button"
+                    class="btn btn-outline-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                   class="bi bi-chevron-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+              </svg>
+            </button>
+            <button (click)="nextPage($event)" [ngStyle]="{'display':nextPageStyle}" style="margin-left: 10px"
+                    type="button"
+                    class="btn btn-outline-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                   class="bi bi-chevron-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+</main><!-- End #main -->
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xoá</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h2>Bạn có muốn xoá tên sách  : {{name}} không?</h2>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+        <button type="button" class="btn btn-primary" (click)="delete(id)" data-bs-dismiss="modal" >Xoá</button>
+      </div>
+    </div>
+  </div>
+</div>
+

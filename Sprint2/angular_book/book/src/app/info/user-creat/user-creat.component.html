@@ -1,0 +1,102 @@
+
+<div class="container mt-5 mb-5" id="container">
+  <div class="form-container sign-up-container scroll-container">
+    <form [formGroup]="registerUser" (ngSubmit)="save()">
+      <h3 class="text-center mb-3">Đăng ký</h3>
+
+     <div class="mb-3">
+       <label class="form-label fw-bold">Tên tài khoản:<span class="text-danger fw-light">(*)</span>:</label>
+       <input formControlName="username" type="text" placeholder="Tên tài khoản:"/>
+       <div class="text-danger" *ngFor="let validation of validationMessages.username">
+         <div class="error-message"
+              *ngIf="registerUser.get('username').hasError(validation.type) && (registerUser.get('username').dirty || registerUser.get('username').touched)">
+           {{validation.message}}</div>
+       </div>
+     </div>
+
+     <div class="mb-3">
+       <label class="form-label fw-bold">Họ tên:<span class="text-danger fw-light">(*)</span>:</label>
+       <input formControlName="fullName" type="text" placeholder="Tên người dùng:"/>
+       <div class="text-danger" *ngFor="let validation of validationMessages.fullName">
+         <div class="error-message"
+              *ngIf="registerUser.get('fullName').hasError(validation.type) && (registerUser.get('fullName').dirty || registerUser.get('fullName').touched)">
+           {{validation.message}}</div>
+       </div>
+     </div>
+
+      <div class="mb-3">
+        <!--phone-->
+        <label class="form-label fw-bold">Số điện thoại:<span class="text-danger fw-light">(*)</span>:</label>
+        <input formControlName="phone" type="text" placeholder="Số điện thoại"/>
+        <div class="text-danger" *ngFor="let validation of validationMessages.phone">
+          <div class="error-message"
+               *ngIf="registerUser.get('phone').hasError(validation.type) && (registerUser.get('phone').dirty || registerUser.get('phone').touched)">
+            {{validation.message}}</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-bold">Email:<span class="text-danger fw-light">(*)</span>:</label>
+        <input formControlName="email" type="email" placeholder="Email"/>
+        <div class="text-danger" *ngFor="let validation of validationMessages.email">
+          <div class="error-message"
+               *ngIf="registerUser.get('email').hasError(validation.type) && (registerUser.get('email').dirty || registerUser.get('email').touched)">
+            {{validation.message}}</div>
+        </div>
+      </div>
+
+     <div class="mb-3">
+       <label class="form-label fw-bold">Địa chỉ:<span class="text-danger fw-light">(*)</span>:</label>
+       <input formControlName="address" type="text" placeholder="Address"/>
+       <div class="text-danger" *ngFor="let validation of validationMessages.address">
+         <div class="error-message"
+              *ngIf="registerUser.get('address').hasError(validation.type) && (registerUser.get('address').dirty || registerUser.get('address').touched)">
+           {{validation.message}}</div>
+       </div>
+     </div>
+
+     <div class="mb-3">
+       <label class="form-label fw-bold">Ngày tạo tài khoản:<span class="text-danger fw-light">(*)</span>:</label>
+       <input formControlName="creationDate" type="date" placeholder="CreationDate"/>
+       <div class="text-danger" *ngFor="let validation of validationMessages.creationDate">
+         <div class="error-message"
+              *ngIf="registerUser.get('creationDate').hasError(validation.type) && (registerUser.get('creationDate').dirty || registerUser.get('creationDate').touched)">
+           {{validation.message}}</div>
+       </div>
+     </div>
+
+      <fieldset formGroupName="passwordGroup">
+        <!--password-->
+        <label class="form-label fw-bold">Mật khẩu:<span class="text-danger fw-light">(*)</span>:</label>
+        <input formControlName="password" type="password" placeholder="Mật khẩu"/>
+        <div class="text-danger" *ngFor="let validation of validationMessages.password">
+          <div class="error-message"
+               *ngIf="registerUser.controls.passwordGroup.get('password').hasError(validation.type) && (registerUser.controls.passwordGroup.get('password').dirty || registerUser.controls.passwordGroup.get('password').touched)">
+            {{validation.message}}</div>
+        </div>
+        <span *ngIf="registerUser.controls.passwordGroup.get('password').hasError('minlength')">
+          Mật khẩu yếu !
+        </span>
+
+        <!--password confirm-->
+        <label class="form-label fw-bold">Nhập lại mật khẩu:<span class="text-danger fw-light">(*)</span>:</label>
+        <input formControlName="passwordConfirm" type="password" placeholder="Nhập lại khẩu"/>
+        <span style="color: red;font-size: 18px;" *ngIf="registerUser.controls.passwordGroup.hasError('checkPasswordConfirm')
+        && registerUser.controls.passwordGroup.get('passwordConfirm').dirty">
+          Mật khẩu không trùng khớp !
+        </span>
+      </fieldset>
+
+      <button type="submit">Đăng ký</button>
+    </form>
+  </div>
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left overlay-right">
+        <h1>Home Book</h1>
+        <p style="font-size: 18px;font-weight: bold">Đăng nhập bằng tài khoản của bạn</p>
+        <button class="ghost" routerLink="/login" id="signIn">Đăng nhập</button>
+      </div>
+    </div>
+  </div>
+</div>

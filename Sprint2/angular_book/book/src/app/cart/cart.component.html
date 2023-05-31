@@ -1,0 +1,334 @@
+
+<div class="container-fluid">
+  <div class="row" style="margin-top: 80px ; margin-bottom: 50px">
+    <div class="container-fluid">
+      <div class="row px-xl-5" *ngIf="carts.length">
+        <div class="col-9">
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-normal mb-0">Giỏ hàng</h3>
+          </div>
+
+          <div *ngFor="let item of items, index as i" class="card rounded-3 mb-4 shadow" style="background: none">
+            <div class="card-body p-4">
+              <div class="row d-flex justify-content-between align-items-center">
+                <div class="col-md-1 col-lg-1 col-xl-1">
+                  <input name="select" (change)="select(item)" type="checkbox">
+                </div>
+                <div class="col-md-2 col-lg-2 col-xl-2">
+                  <img
+                    [src]="item.book.imageUrl"
+                    class="img-fluid rounded-3" alt="Cotton T-shirt">
+                </div>
+                <div class="col-md-3 col-lg-3 col-xl-3">
+                  <p class="lead fw-normal mb-2">{{item.book.title}}</p>
+                </div>
+                <div class="col-md-2 col-lg-3 col-xl-2 d-flex">
+                <span class="px-2 d-flex justify-content-center align-items-center"
+                      (click)="decrease(i)" style="cursor: pointer">
+                  <i class="fas fa-minus text-light"></i>
+                </span>
+
+                  <input min="1" name="quantity" type="number" [value]="item.quantity"
+                         class="form-control form-control-sm text-light checkbox"
+                         style="background: none; border: white solid 1px"/>
+
+                  <span class="px-2 d-flex justify-content-center align-items-center"
+                        (click)="increase(i)" style="cursor: pointer">
+                  <i class="fas fa-plus text-light"></i>
+                </span>
+                </div>
+                <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                  <h5 class="mb-0">{{item.book.price * item.quantity | currency:'':'':'4.0-0'}}&nbsp;đ</h5>
+                </div>
+                <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                  <a (click)="callToast(item)" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-lg-3" style="margin-top: 15px;background-color: #8bc34a12;padding-top: 20px;border-radius: 5px;">
+          <div class="example-container">
+            <div appearance="outline" class="w-100">
+              <h6 style="padding: 5px 0px;margin-bottom: 15px;" class="border-bottom">Họ tên: <span style="color: #00BCD4;">{{user.fullName}}</span></h6>
+              <h6 style="padding: 5px 0px;margin-bottom: 15px;" class="border-bottom">Địa chỉ: <span style="color: #00BCD4;">{{user.address}}</span></h6>
+              <h6 style="padding: 5px 0px;margin-bottom: 15px;" class="border-bottom">Số điện thoại: <span style="color: #00BCD4;">{{user.phone}}</span></h6>
+            </div>
+          </div>
+
+          <div class="mb-5 mt-3">
+            <div class="border-bottom">
+              <div class="d-flex justify-content-between">
+                <h6>Tổng số lượng:</h6>
+                <h6><b style="color: #00BCD4;" class=" me-2">{{carts.quantity}}</b></h6>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <div class="d-flex justify-content-between mt-2">
+                <h6>Tổng tiền:</h6>
+                <h6><b style="color: #00BCD4;" class="me-2">{{addCurrencySymbol(totalPrice)}}</b></h6>
+              </div>
+            </div>
+            <div class="pt-2">
+              <div class="d-flex justify-content-between mt-2">
+                <h6>Phí vận chuyển:</h6>
+                <h6><b style="color: #00BCD4;" class=" text-danger me-2">- {{addCurrencySymbol(transportFee)}}</b></h6>
+              </div>
+            </div>
+            <div class="pt-2">
+              <div class="d-flex justify-content-between mt-2">
+                <h6>Tổng cộng:</h6>
+                <h6><b style="color: #0d0e0e;font-weight: 600" class=" me-2">{{addCurrencySymbol(totalAmount)}}</b></h6>
+              </div>
+            </div>
+            <div class="d-flex justify-content-evenly mt-4">
+              <a routerLink="">
+                <button class="btn btn-success">Tiếp tục mua sắm</button>
+              </a>
+              <button (click)="openModal(user)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Thanh toán
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <form action="" [formGroup]="userUpdateForm" (ngSubmit)="updateSubmit(user.id)">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header mt-0" style="background: #5fcf80;">
+                <h5 class="modal-title" id="exampleModalLabel">Bạn có muốn thay đổi thông tin hoặc địa chỉ?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class = "form-group">
+                  <label style="font-weight: 700;" for = "name">Họ tên:</label>
+                  <input type = "text" class = "form-control" id = "name" formControlName="fullName" [value]="userSelected?.fullName">
+                </div>
+
+                <div class = "form-group mt-3">
+                  <label style="font-weight: 700;" for = "phone">Số điện thoại:</label>
+                  <input type = "text" class = "form-control" id = "phone" formControlName="phone" >
+                </div>
+
+                <div class = "form-group mt-3">
+                  <label style="font-weight: 700;" for = "address">Địa chỉ cụ thể:</label>
+                  <input type = "text" class = "form-control" id = "address" formControlName="address" >
+                </div>
+                <p class="mt-4">Số tiền cần phải thanh toán là: <span style="font-weight: bold;color: #0d0e0e">{{addCurrencySymbol(totalAmount)}}</span></p>
+
+              </div>
+              <div class="modal-footer">
+                <!--              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Xác nhận sửa</button>-->
+                <button type="submit" class="btn btn-secondary">Xác nhận sửa</button>
+                <button (click)="payment()" type="button" class="btn btn-danger">Xác nhận thanh toán</button>
+              </div>
+              <div id="paypal" class="mx-2"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="carts.length == 0">
+        <div class="container">
+          <div class="row">
+            <div class="py-6 py-lg-12">
+              <div class="container">
+                <div class="row">
+                  <div class="offset-lg-3 col-lg-6 col-md-12 col-12 text-center">
+                    <img style="width: 100%;"
+                         src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-2506.jpg?w=1060&t=st=1666842833~exp=1666843433~hmac=fbc8692571017572e34eae5a6214ae0ae57c8c9465e29a4c9c602f5567843d69"
+                         alt="" class="img-fluid mb-4"/>
+                    <div class="me-2 animate__animated animate__slideInDown"><b>Chưa có sản phẩm nào trong giở hàng của bạn !!</b></div>
+                    <button class="btn btn-success mt-2" routerLink="" color="warn">Tiếp Tục Mua Sắm</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<!--<div class="container-fluid">-->
+<!--  <div class="row" style="margin-top: 80px ; margin-bottom: 50px">-->
+<!--    <div class="container-fluid">-->
+<!--      <div class="row px-xl-5" *ngIf="carts.length">-->
+<!--        <div class="col-lg-9 table-responsive mb-5">-->
+<!--          <table class="table table-striped">-->
+<!--            <thead class="thead-dark">-->
+<!--            <tr style="font-size: 17px">-->
+<!--              <th>STT</th>-->
+<!--              <th>Ảnh</th>-->
+<!--              <th>Tên Sách</th>-->
+<!--              <th>Giá</th>-->
+<!--              <th class="text-center">Số Lượng</th>-->
+<!--              <th>Tổng Tiền</th>-->
+<!--              <th>Xóa</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr *ngFor="let item of carts; index as i">-->
+<!--              <td style="width: 5%" class="align-middle text-center">{{i + 1}}</td>-->
+<!--              <td style="width: 10%" class="align-middle">-->
+<!--                <img src="{{item.image}}" alt="" width="100%" height="100%">-->
+<!--              </td>-->
+<!--              <td class="align-middle" style="max-width: 200px; width: 20%">{{item.name}}</td>-->
+<!--              <td style="width: 10%" class="align-middle">{{addCurrencySymbol(item.price)}}</td>-->
+<!--              <td style="width: 30%;" class="align-middle text-center">-->
+<!--                <ul class="list-inline mt-" style="display: flex;justify-content: center;align-items: center;">-->
+<!--                  <li class="list-inline-item">-->
+<!--                    <button style = "border-radius: 5px;" *ngIf="item.quantity == 1" (click)="decrease(i, item.quantity)"-->
+<!--                    >- -->
+<!--                    </button>-->
+<!--                    <button style = "border-radius: 5px;" *ngIf="item.quantity > 1" (click)="decrease(i, item.quantity)">-->
+<!--                      - -->
+<!--                    </button>-->
+<!--                  </li>-->
+<!--                  <li class="list-inline-item">-->
+<!--                    <input type="number" style="width: 50px; border: hidden; text-align: center" min="1"-->
+<!--                           oninput="this.value = !!this.value && Math.abs(this.value) > 0 ? Math.abs(this.value) : 1"-->
+<!--                           (change)="updateQuantity(i, $event)"-->
+<!--                           [value]="item.quantity">-->
+<!--                  </li>-->
+<!--                  <li class="list-inline-item">-->
+<!--                    <button style = "border-radius: 5px;" (click)="increase(i, item.quantity)">-->
+<!--                      +-->
+<!--                    </button>-->
+<!--                  </li>-->
+<!--                </ul>-->
+<!--              </td>-->
+<!--              <td style="width: 15%;" class="align-middle">{{addCurrencySymbol(total(item))}}</td>-->
+<!--              <td style="width: 5%;" class="align-middle">-->
+<!--                <button style ="color: maroon;border-radius: 5px;border: none" color="warn" (click)="deleteCart(i)"><i class="fas fa-trash-alt"></i></button>-->
+<!--              </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--          </table>-->
+<!--        </div>-->
+
+<!--        <div class="col-lg-3" style="margin-top: 15px;background-color: #8bc34a12;padding-top: 20px;border-radius: 5px;">-->
+<!--          <div class="example-container">-->
+<!--            <div appearance="outline" class="w-100">-->
+<!--              <h6 style="padding: 5px 0px;margin-bottom: 15px;" class="border-bottom">Họ tên: <span style="color: #00BCD4;">{{user.fullName}}</span></h6>-->
+<!--              <h6 style="padding: 5px 0px;margin-bottom: 15px;" class="border-bottom">Địa chỉ: <span style="color: #00BCD4;">{{user.address}}</span></h6>-->
+<!--              <h6 style="padding: 5px 0px;margin-bottom: 15px;" class="border-bottom">Số điện thoại: <span style="color: #00BCD4;">{{user.phone}}</span></h6>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <div class="mb-5 mt-3">-->
+<!--            <div class="border-bottom">-->
+<!--              <div class="d-flex justify-content-between">-->
+<!--                <h6>Tổng số lượng:</h6>-->
+<!--                <h6><b style="color: #00BCD4;" class=" me-2">{{totalQuantity}}</b></h6>-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div class="pt-2">-->
+<!--              <div class="d-flex justify-content-between mt-2">-->
+<!--                <h6>Tổng tiền:</h6>-->
+<!--                <h6><b style="color: #00BCD4;" class="me-2">{{addCurrencySymbol(totalPrice/1000)}}</b></h6>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="pt-2">-->
+<!--              <div class="d-flex justify-content-between mt-2">-->
+<!--                <h6>Phí vận chuyển:</h6>-->
+<!--                <h6><b style="color: #00BCD4;" class=" text-danger me-2">- {{addCurrencySymbol(transportFee)}}</b></h6>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="pt-2">-->
+<!--              <div class="d-flex justify-content-between mt-2">-->
+<!--                <h6>Tổng cộng:</h6>-->
+<!--                <h6><b style="color: #0d0e0e;font-weight: 600" class=" me-2">{{addCurrencySymbol(totalAmount)}}</b></h6>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="d-flex justify-content-evenly mt-4">-->
+<!--              <a routerLink="">-->
+<!--                <button class="btn btn-success">Tiếp tục mua sắm</button>-->
+<!--              </a>-->
+<!--              <button (click)="openModal(user)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">-->
+<!--                Thanh toán-->
+<!--              </button>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Modal &ndash;&gt;-->
+<!--      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--        <form action="" [formGroup]="userUpdateForm" (ngSubmit)="updateSubmit(user.id)">-->
+<!--          <div class="modal-dialog">-->
+<!--            <div class="modal-content">-->
+<!--              <div class="modal-header mt-0" style="background: #5fcf80;">-->
+<!--                <h5 class="modal-title" id="exampleModalLabel">Bạn có muốn thay đổi thông tin hoặc địa chỉ?</h5>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--              </div>-->
+<!--              <div class="modal-body">-->
+<!--                <div class = "form-group">-->
+<!--                  <label style="font-weight: 700;" for = "name">Họ tên:</label>-->
+<!--                  <input type = "text" class = "form-control" id = "name" formControlName="fullName" [value]="userSelected?.fullName">-->
+<!--                </div>-->
+
+<!--                <div class = "form-group mt-3">-->
+<!--                  <label style="font-weight: 700;" for = "phone">Số điện thoại:</label>-->
+<!--                  <input type = "text" class = "form-control" id = "phone" formControlName="phone" >-->
+<!--                </div>-->
+
+<!--                <div class = "form-group mt-3">-->
+<!--                  <label style="font-weight: 700;" for = "address">Địa chỉ cụ thể:</label>-->
+<!--                  <input type = "text" class = "form-control" id = "address" formControlName="address" >-->
+<!--                </div>-->
+<!--                <p class="mt-4">Số tiền cần phải thanh toán là: <span style="font-weight: bold;color: #0d0e0e">{{addCurrencySymbol(totalAmount)}}</span></p>-->
+
+<!--              </div>-->
+<!--              <div class="modal-footer">-->
+<!--                &lt;!&ndash;              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Xác nhận sửa</button>&ndash;&gt;-->
+<!--                <button type="submit" class="btn btn-secondary">Xác nhận sửa</button>-->
+<!--                <button (click)="payment()" type="button" class="btn btn-danger">Xác nhận thanh toán</button>-->
+<!--              </div>-->
+<!--              <div id="paypal" class="mx-2"></div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </form>-->
+<!--      </div>-->
+
+<!--      <div *ngIf="carts.length == 0">-->
+<!--        <div class="container">-->
+<!--          <div class="row">-->
+<!--            <div class="py-6 py-lg-12">-->
+<!--              <div class="container">-->
+<!--                <div class="row">-->
+<!--                  <div class="offset-lg-3 col-lg-6 col-md-12 col-12 text-center">-->
+<!--                    <img style="width: 100%;"-->
+<!--                      src="https://img.freepik.com/free-vector/no-data-concept-illustration_114360-2506.jpg?w=1060&t=st=1666842833~exp=1666843433~hmac=fbc8692571017572e34eae5a6214ae0ae57c8c9465e29a4c9c602f5567843d69"-->
+<!--                      alt="" class="img-fluid mb-4"/>-->
+<!--                    <div class="me-2 animate__animated animate__slideInDown"><b>Chưa có sản phẩm nào trong giở hàng của bạn !!</b></div>-->
+<!--                    <button class="btn btn-success mt-2" routerLink="" color="warn">Tiếp Tục Mua Sắm</button>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+
