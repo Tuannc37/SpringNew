@@ -4,7 +4,7 @@ import {AppUser} from './appUser';
 
 export class CartDetail {
   id: number;
-  quantity: string;
+  quantity: number;
   book: Book;
   status: number;
   user: AppUser;

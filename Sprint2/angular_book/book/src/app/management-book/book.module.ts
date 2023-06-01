@@ -17,6 +17,7 @@ import { ListSearchComponent } from './list-search/list-search.component';
 import { ListNewComponent } from './list-new/list-new.component';
 import { HotBookComponent } from './hot-book/hot-book.component';
 import { ListBookSaleComponent } from './list-book-sale/list-book-sale.component';
+import { ListManageCartComponent } from './list-manage-cart/list-manage-cart.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { ListBookSaleComponent } from './list-book-sale/list-book-sale.component
     ListSearchComponent,
     ListNewComponent,
     HotBookComponent,
-    ListBookSaleComponent
+    ListBookSaleComponent,
+    ListManageCartComponent
   ],
   imports: [
     CommonModule,

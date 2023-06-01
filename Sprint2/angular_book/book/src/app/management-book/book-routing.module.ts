@@ -11,6 +11,7 @@ import {ListNewComponent} from "./list-new/list-new.component";
 import {HotBookComponent} from "./hot-book/hot-book.component";
 import {ListBookSaleComponent} from "./list-book-sale/list-book-sale.component";
 import {UserCreatComponent} from "../info/user-creat/user-creat.component";
+import {ListManageCartComponent} from "./list-manage-cart/list-manage-cart.component";
 
 
 const routes: Routes = [
@@ -79,6 +80,15 @@ const routes: Routes = [
   {
     path: 'listBookSale',
     component: ListBookSaleComponent,
+    canActivate: [AuthGuard],
+    data: {
+      roles: ['ROLE_ADMIN', 'ROLE_USER']
+    }
+  },
+
+  {
+    path: 'list-manage-cart',
+    component: ListManageCartComponent,
     canActivate: [AuthGuard],
     data: {
       roles: ['ROLE_ADMIN', 'ROLE_USER']

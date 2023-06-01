@@ -1,12 +1,12 @@
 package example.book.service;
 
+import example.book.dto.CartSummary;
 import example.book.model.CartDetail;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ICartDetailService {
-    List<CartDetail> getCartDetail(String username);
+    List<CartDetail> getCartDetails(String username);
 
     CartDetail findByAccountIdAndBookId(Integer userId, Integer bookId);
 
@@ -19,4 +19,8 @@ public interface ICartDetailService {
     void pay(List<CartDetail> cartDetails);
 
     CartDetail findByIdCartDetails(Integer idCartDetails);
+
+    Integer getTotalQuantityByUserId(Integer idUser);
+
+    List<CartSummary> getCartSummary();
 }

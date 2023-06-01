@@ -1,5 +1,7 @@
 package example.book.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,20 +9,23 @@ public class CartDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String quantity;
+    private Integer quantity;
     private Integer status;
+
     @ManyToOne
+//    @JsonBackReference("cart-book")
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JsonBackReference("book-cartDetail")
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
     private AppUser user;
 
     public CartDetail() {
     }
 
-    public CartDetail(Integer id, String quantity, Integer status, Book book, AppUser user) {
+    public CartDetail(Integer id, Integer quantity, Integer status, Book book, AppUser user) {
         this.id = id;
         this.quantity = quantity;
         this.status = status;
@@ -36,11 +41,11 @@ public class CartDetail {
         this.id = id;
     }
 
-    public String getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

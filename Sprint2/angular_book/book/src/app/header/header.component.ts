@@ -8,6 +8,7 @@ import {DataService} from "../service/data.service";
 import Swal from "sweetalert2";
 import {Book} from "../model/book";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {CartService} from "../service/cart.service";
 
 @Component({
   selector: 'app-header',
@@ -36,6 +37,7 @@ export class HeaderComponent implements OnInit {
               private category: BookService,
               private bookService: BookService,
               private route: Router,
+              private cartService: CartService,
               private formBuilder: FormBuilder,
               private activatedRoute: ActivatedRoute,
               private dataService: DataService) {
@@ -49,13 +51,21 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadHeader();
-    this.dataService.getData.subscribe((result: any) => {
-      this.totalQuantity = parseInt(result.quantity, 10);
-    });
+    this.loadTotalQuantity();
     this.category.getCategory().subscribe(next => {
       this.categoryList = next;
     });
 
+  }
+  loadTotalQuantity(): void {
+    this.cartService.getTotalQuantity().subscribe(
+      totalQuantity => {
+        this.totalQuantity = totalQuantity;
+      },
+      error => {
+        this.totalQuantity = 0;
+      }
+    );
   }
 
   getId(id: number) {

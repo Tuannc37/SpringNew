@@ -1,5 +1,6 @@
 package example.book.service.impl;
 
+import example.book.dto.CartSummary;
 import example.book.model.CartDetail;
 import example.book.model.Invoice;
 import example.book.repository.ICartDetailRepository;
@@ -7,13 +8,14 @@ import example.book.service.ICartDetailService;
 import example.book.service.IInvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CartDetailService implements ICartDetailService {
 
     @Autowired
@@ -24,8 +26,8 @@ public class CartDetailService implements ICartDetailService {
 
 
     @Override
-    public List<CartDetail> getCartDetail(String username) {
-        return cartDetailRepository.findByUser_Username(username);
+    public List<CartDetail> getCartDetails(String username) {
+        return cartDetailRepository.findCartDetailsByUserUsername(username);
     }
 
     @Override
@@ -34,23 +36,22 @@ public class CartDetailService implements ICartDetailService {
     }
 
 
-
     @Override
     public void save(CartDetail cartDetail) {
         if (cartDetail.getId() == null) {
             CartDetail item = findByAccountIdAndBookId(cartDetail.getUser().getId(), cartDetail.getBook().getId());
             if (item == null) {
-                cartDetail.setQuantity("1");
+                cartDetail.setQuantity(1);
                 cartDetail.setStatus(1);
                 this.cartDetailRepository.save(cartDetail);
             } else {
-                item.setQuantity(item.getQuantity() + 1);
+                item.setQuantity((item.getQuantity()) + 1);
                 this.cartDetailRepository.save(item);
             }
         } else {
             CartDetail existingItem = findByIdCartDetails(cartDetail.getId());
             if (existingItem != null) {
-                existingItem.setQuantity(cartDetail.getQuantity() +1 );
+                existingItem.setQuantity(existingItem.getQuantity() +1 );
                 existingItem.setStatus(cartDetail.getStatus());
                 this.cartDetailRepository.save(existingItem);
             }
@@ -60,7 +61,7 @@ public class CartDetailService implements ICartDetailService {
 
     @Override
     public void delete(Integer id) {
-        cartDetailRepository.updateStatusById(id);
+        cartDetailRepository.deleteCartDetailById(id);
     }
 
     @Override
@@ -81,6 +82,17 @@ public class CartDetailService implements ICartDetailService {
     @Override
     public CartDetail findByIdCartDetails(Integer idCartDetails) {
         return cartDetailRepository.findByIdCartDetails(idCartDetails);
+    }
+
+    @Override
+    public Integer getTotalQuantityByUserId(Integer idUser) {
+        Integer totalQuantity = cartDetailRepository.getTotalQuantityByUserId(idUser);
+        return totalQuantity;
+    }
+
+    @Override
+    public List<CartSummary> getCartSummary() {
+        return cartDetailRepository.getCartSummary();
     }
 
 

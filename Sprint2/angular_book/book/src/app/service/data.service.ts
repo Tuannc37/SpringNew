@@ -17,6 +17,10 @@ export class DataService {
   private previousUrl = new BehaviorSubject("");
   private cartItemsAmount = new BehaviorSubject(0);
 
+  private totalQuantitySubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  public totalQuantity$ = this.totalQuantitySubject.asObservable();
+
+
   constructor() { }
 
   currentLoginStatus = this.isLogin.asObservable();
@@ -42,6 +46,10 @@ export class DataService {
 
   changeData(data: any) {
     this.data.next(data);
+  }
+
+  updateTotalQuantity(quantity: number) {
+    this.totalQuantitySubject.next(quantity);
   }
 
 }

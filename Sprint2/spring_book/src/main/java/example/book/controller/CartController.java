@@ -1,5 +1,6 @@
 package example.book.controller;
 
+import example.book.dto.CartSummary;
 import example.book.model.CartDetail;
 import example.book.service.ICartDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,10 @@ public class CartController {
 
     @GetMapping("")
     public ResponseEntity<List<CartDetail>> getCartDetail(@RequestParam String username){
-        List<CartDetail> cartDetailList = this.cartDetailService.getCartDetail(username);
+        List<CartDetail> cartDetailList = cartDetailService.getCartDetails(username);
+        if (cartDetailList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(cartDetailList, HttpStatus.OK);
     }
 
@@ -44,5 +48,20 @@ public class CartController {
     public  ResponseEntity<Void> pay(@RequestBody List<CartDetail> cartDetails){
         this.cartDetailService.pay(cartDetails);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("quantity")
+    public ResponseEntity<Integer> getTotalQuantityByUserId(@RequestParam Integer idUser) {
+        Integer totalQuantity = cartDetailService.getTotalQuantityByUserId(idUser);
+        return ResponseEntity.ok(totalQuantity);
+    }
+
+    @GetMapping("list/summary")
+    public ResponseEntity<List<CartSummary>> getCartSummary() {
+        List<CartSummary> cartSummaryList = cartDetailService.getCartSummary();
+        if (cartSummaryList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(cartSummaryList);
     }
 }
