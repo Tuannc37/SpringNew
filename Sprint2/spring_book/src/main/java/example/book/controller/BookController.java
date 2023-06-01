@@ -49,7 +49,7 @@ public class BookController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<Book>> findAllBook(@PageableDefault(value = 12) Pageable pageable,
+    public ResponseEntity<Page<Book>> findAllBook(@PageableDefault(value = 6) Pageable pageable,
                                                   @RequestParam Optional<String> name,
                                                   @RequestParam Optional<String> category) {
         String nameSearch = name.orElse("");

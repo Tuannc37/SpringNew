@@ -2,6 +2,8 @@ package example.book.repository;
 
 import example.book.dto.CartSummary;
 import example.book.model.CartDetail;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,6 +35,7 @@ public interface ICartDetailRepository extends JpaRepository<CartDetail,Integer>
     @Query("SELECT cd.user.username AS username, cd.user.address AS address, cd.user.phone AS phone, SUM(cd.quantity) AS totalQuantity, SUM(cd.book.price * cd.quantity) AS totalPrice " +
             "FROM CartDetail cd " +
             "GROUP BY cd.user.username, cd.user.address, cd.user.phone")
-    List<CartSummary> getCartSummary();
+    Page<CartSummary> getCartSummary(Pageable pageable);
+
 
 }

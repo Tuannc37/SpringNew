@@ -83,26 +83,44 @@ export class CartComponent implements OnInit {
     });
   }
 
-  payment() {
+  payment(){
     document.getElementById('paypal').innerHTML = "";
-    const username = this.tokenStorageService.getUser().username;
-    render({
+    this.renderParam = {
       id: '#paypal',
       currency: 'USD',
       value: String(((this.totalAmount) / 23000).toFixed(2)),
-      onApprove: () => {
-        for (const item of this.carts) {
-          item.book = {
-            id: item.id
-          };
-        }
-        this.cartDetailService.saveCartDetail(username, this.carts).subscribe();
-        Swal.fire('Thông Báo !!', 'Thanh Toán Thành Công. <br>Sách Của Bạn Sẽ Được Giao Trong Vòng 3 Ngày Tới', 'success').then();
-        this.carts = [];
-        this.cartService.updateAll(this.carts);
+      onApprove: details => {
+        this.cartService.updateAll(this.items).subscribe();
+        this.selected.map(item => item.status = 0)
+        this.cartService.pay(this.selected).subscribe(ok => {
+          this.getCartItems();
+        });
+
+        Swal.fire('Thanh toán','Thanh toán thành công, hãy kiểm tra đơn hàng của bạn','success')
       }
-    });
+    }
   }
+
+  // payment() {
+  //   document.getElementById('paypal').innerHTML = "";
+  //   const username = this.tokenStorageService.getUser().username;
+  //   render({
+  //     id: '#paypal',
+  //     currency: 'USD',
+  //     value: String(((this.totalAmount) / 23000).toFixed(2)),
+  //     onApprove: () => {
+  //       for (const item of this.carts) {
+  //         item.book = {
+  //           id: item.id
+  //         };
+  //       }
+  //       this.cartDetailService.saveCartDetail(username, this.carts).subscribe();
+  //       Swal.fire('Thông Báo !!', 'Thanh Toán Thành Công. <br>Sách Của Bạn Sẽ Được Giao Trong Vòng 3 Ngày Tới', 'success').then();
+  //       this.carts = [];
+  //       this.cartService.updateAll(this.carts);
+  //     }
+  //   });
+  // }
 
   loadTotalQuantity(): void {
     this.cartService.getTotalQuantity().subscribe(
@@ -240,5 +258,6 @@ export class CartComponent implements OnInit {
     });
     return totalQuantity;
   }
+
 
 }

@@ -64,7 +64,7 @@ export class CartService {
     console.log(total);
     return total;
   }
-  
+
   addToCart(id: number) {
     const cartItem = {
       book: {
@@ -95,6 +95,10 @@ export class CartService {
 
   pay(selected: CartDetail[]) {
     return this.httpClient.post('http://localhost:8080/api/public/cart/pay', selected,this.authenticationService.getHttpOption())
+  }
+
+  getListManageCart(page: number): Observable<any> {
+    return this.httpClient.get<CartDetail[]>('http://localhost:8080/api/public/cart/list/summary?page=' + page);
   }
 
 }

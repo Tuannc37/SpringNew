@@ -56,36 +56,6 @@ export class ListBookComponent implements OnInit {
     });
   }
 
-
-  // getListSearch() {
-  //   this.bookService.getListAndSearch(this.indexPagination, this.categorySearch,
-  //     this.nameSearch).subscribe((data?: any) => {
-  //     this.totalPage = [];
-  //     if (data === null) {
-  //       this.totalPage = new Array(0);
-  //       this.bookList = [];
-  //       // this.displayPagination = 'none';
-  //     } else {
-  //       this.number = data?.number;
-  //       console.log(this.number);
-  //       this.pageSize = data?.size;
-  //       this.numberOfElement = data?.numberOfElements;
-  //       this.bookList = data?.content;
-  //       console.log(this.bookList + ' ok');
-  //       this.totalElements = data?.totalElements;
-  //     }
-  //     this.checkPreviousAndNext();
-  //   }, error => {
-  //     this.bookList = null;
-  //   });
-  // }
-  //
-  // searchBook() {
-  //   this.categorySearch = this.searchForm.value.category.name;
-  //   this.nameSearch = this.searchForm.value.name;
-  //   this.getListSearch();
-  // }
-
   getListSearch() {
     const category = this.searchForm.value.category.name;
     const name = this.searchForm.value.name;
