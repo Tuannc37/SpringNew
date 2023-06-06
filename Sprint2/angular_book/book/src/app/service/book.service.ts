@@ -90,6 +90,10 @@ export class BookService {
     return this.http.delete<Book>(`${API_URL}/book/delete/${id}`);
   }
 
+  getListUser(page: number): Observable<any> {
+    return this.http.get<any>(API_URL + '/book/list/userAll?page=' + page);
+  }
+
   checkDate(date: string): Observable<string> {
     return this.http.get<string>(API_URL + '/book/date/' + date);
   }

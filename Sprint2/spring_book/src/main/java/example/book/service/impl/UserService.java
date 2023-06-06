@@ -1,9 +1,14 @@
 package example.book.service.impl;
 
+import example.book.model.AppRole;
 import example.book.model.AppUser;
+import example.book.model.UserRole;
 import example.book.repository.UserRepository;
+import example.book.repository.UserRoleRepository;
 import example.book.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -25,11 +30,15 @@ public class UserService implements IUserService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
 
     @Override
     public AppUser findByName(String name) {
         return userRepository.findAppUserByName(name);
     }
+
 
     @Override
     public String existsByUserName(String username) throws MessagingException, UnsupportedEncodingException {
@@ -67,8 +76,8 @@ public class UserService implements IUserService {
 
 
     @Override
-    public List<AppUser> findAll() {
-        return userRepository.findAll();
+    public Page<AppUser> findAllUser(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
 
@@ -77,14 +86,31 @@ public class UserService implements IUserService {
         userRepository.save(appUser.getUsername(), appUser.getPassword(), appUser.getEmail());
     }
 
+
     @Override
     public void create(AppUser appUser) {
+
         userRepository.save(appUser);
+
+        UserRole userRole = new UserRole();
+
+        AppRole appRole = new AppRole();
+        appRole.setId(1);
+
+        userRole.setAppUser(appUser);
+        userRole.setAppRole(appRole);
+        userRole.setStatus(0);
+        userRoleRepository.save(userRole);
     }
 
     @Override
     public Optional<AppUser> findById(Integer id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public AppUser findByIdUser(Integer idUser) {
+        return userRepository.findByIdUser(idUser);
     }
 
 
@@ -112,4 +138,10 @@ public class UserService implements IUserService {
     public Boolean existsEmail(String email) {
         return email.equals(userRepository.existsEmail(email));
     }
+
+    @Override
+    public Integer countTotalUsers() {
+        return userRepository.countTotalUsers();
+    }
+
 }

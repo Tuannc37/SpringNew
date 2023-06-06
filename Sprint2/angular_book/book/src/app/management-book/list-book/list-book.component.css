@@ -31,7 +31,6 @@
   font-family: 'Roboto', sans-serif;
 }
 .container {
-  background-color: white;
   border-radius: 5px;
   padding: 20px;
   opacity: 85%;
@@ -57,4 +56,8 @@ hr {
 
 th {
   color: white !important;
+}
+
+li.page-item {
+  color: white;
 }

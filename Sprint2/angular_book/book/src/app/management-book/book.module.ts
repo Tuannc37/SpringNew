@@ -18,6 +18,7 @@ import { ListNewComponent } from './list-new/list-new.component';
 import { HotBookComponent } from './hot-book/hot-book.component';
 import { ListBookSaleComponent } from './list-book-sale/list-book-sale.component';
 import { ListManageCartComponent } from './list-manage-cart/list-manage-cart.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { ListManageCartComponent } from './list-manage-cart/list-manage-cart.com
     ListNewComponent,
     HotBookComponent,
     ListBookSaleComponent,
-    ListManageCartComponent
+    ListManageCartComponent,
+    DashboardComponent
   ],
   imports: [
     CommonModule,

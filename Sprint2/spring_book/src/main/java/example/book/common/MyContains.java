@@ -1,10 +1,10 @@
 package example.book.common;
 
 public class MyContains {
-    public static final String MY_EMAIL = "supperman1809@gmail.com";
+    public static final String MY_EMAIL = "truongthai214@gmail.com";
 
     // Replace password!!
-    public static final String MY_PASSWORD = "12345678";
+    public static final String MY_PASSWORD = "rzfwwvnjrnfatpjb";
 
     // And receiver!
     public static final String MAIL_RECEIVER= "";

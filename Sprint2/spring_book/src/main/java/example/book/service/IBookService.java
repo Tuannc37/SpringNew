@@ -23,4 +23,5 @@ public interface IBookService {
     List<Book> findAllByOrderByNumberBookSoldDesc();
 
     Page<Book> findAllByPriceLessThanOrEqual(Pageable pageable ,String name);
+    Integer countTotalBooks();
 }

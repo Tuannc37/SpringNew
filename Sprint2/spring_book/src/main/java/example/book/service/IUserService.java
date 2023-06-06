@@ -2,6 +2,8 @@ package example.book.service;
 
 
 import example.book.model.AppUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -17,13 +19,15 @@ public interface IUserService {
 
     void saveNewPassword(String password, String name);
 
-    List<AppUser> findAll();
+    Page<AppUser> findAllUser(Pageable pageable);
 
     void save(AppUser appUser);
 
     void create(AppUser appUser);
 
     Optional<AppUser> findById(Integer id);
+
+    AppUser findByIdUser(Integer idUser);
 
     void edit(AppUser appUser);
 
@@ -34,4 +38,6 @@ public interface IUserService {
     Boolean existsUsername(String username);
 
     Boolean existsEmail(String email);
+
+    Integer countTotalUsers();
 }

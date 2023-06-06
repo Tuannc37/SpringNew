@@ -2,47 +2,26 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpEvent} from "@angular/common/http";
 import {TokenStorageService} from "./token-storage.service";
 import {AuthService} from "./auth.service";
-import {BehaviorSubject, Observable, of} from "rxjs";
+import {BehaviorSubject, Observable, of, Subject} from "rxjs";
 import {CartDetail} from "../model/cartDetail";
-import {catchError, tap} from "rxjs/operators";
+import {catchError, switchMap, tap} from "rxjs/operators";
+import {CartSummary} from "../model/cart-summary";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
 
-  // constructor() { }
-  //
-  // getCart() {
-  //   const cartJson = localStorage.getItem('cart');
-  //   if (cartJson) {
-  //     return JSON.parse(cartJson);
-  //   } else {
-  //     return [];
-  //   }
-  // }
-  //
-  // saveCart(carts: any) {
-  //   const cartJson = JSON.stringify(carts);
-  //   localStorage.setItem('cart', cartJson);
-  // }
-  //
-
-  //
-  // getTotalQuantity() {
-  //   const carts = this.getCart();
-  //   let total = 0;
-  //   carts.forEach((item: any) => {
-  //     total += item.quantity;
-  //   });
-  //   return total;
-  // }
-
-  httpOption: any
+  httpOption: any;
+  totalQuantitySubject: Subject<number> = new Subject<number>();
 
   constructor(private httpClient: HttpClient,
               private tokenStorageService: TokenStorageService,
               private authenticationService: AuthService) {
+  }
+
+  getTotalQuantityObservable(): Observable<number> {
+    return this.totalQuantitySubject.asObservable();
   }
 
 
@@ -53,28 +32,30 @@ export class CartService {
     return this.httpClient.get<CartDetail[]>('http://localhost:8080/api/public/cart?username='
       + this.tokenStorageService.getUserName(),this.httpOption);
   }
-  getTotalPrice() {
-    const carts = this.getCartItems();
-    let total = 0;
-    carts.forEach((item: any) => {
-      const price = parseFloat(item.book.price);
-      total += item.quantity * price;
-    });
-    console.log("Total");
-    console.log(total);
-    return total;
-  }
 
-  addToCart(id: number) {
+  addToCart(itemId: number): Observable<any> {
     const cartItem = {
       book: {
-        id: id
+        id: itemId,
       },
       user: {
         id: this.tokenStorageService.getId()
       }
-    }
-    return this.httpClient.post('http://localhost:8080/api/public/cart/save', cartItem,this.authenticationService.getHttpOption())
+    };
+
+    return this.httpClient.post('http://localhost:8080/api/public/cart/save', cartItem, this.authenticationService.getHttpOption()).pipe(
+      switchMap(() => {
+        return this.getTotalQuantity().pipe(
+          tap(totalQuantity => {
+            const updatedQuantity = totalQuantity;
+            console.log(updatedQuantity);
+            // @ts-ignore
+            this.totalQuantitySubject.next(updatedQuantity);
+          }),
+          catchError(() => of(0))
+        );
+      })
+    );
   }
 
   getTotalQuantity() {
@@ -99,6 +80,31 @@ export class CartService {
 
   getListManageCart(page: number): Observable<any> {
     return this.httpClient.get<CartDetail[]>('http://localhost:8080/api/public/cart/list/summary?page=' + page);
+  }
+
+  updateInvoiceStatusToPaid(invoiceId: number) {
+    const url = `http://localhost:8080/api/public/cart/invoices/${invoiceId}`;
+    return this.httpClient.post<void>(url, {});
+  }
+
+  getListInvoiceUser(page: number, name: string): Observable<CartSummary[]> {
+    return this.httpClient.get<CartSummary[]>('http://localhost:8080/api/public/cart/invoices/user?username=' + name + '&page=' + page);
+  }
+
+  calculateTotalProfit(){
+    return this.httpClient.get('http://localhost:8080/api/public/cart/total-profit')
+  }
+
+  getTotalQuantityAllInvoice(){
+    return this.httpClient.get('http://localhost:8080/api/public/cart/total-quantity')
+  }
+
+  countTotalUsers(){
+    return this.httpClient.get('http://localhost:8080/api/public/cart/total-users')
+  }
+
+  countTotalBooks(){
+    return this.httpClient.get('http://localhost:8080/api/public/book/total')
   }
 
 }

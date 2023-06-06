@@ -19,30 +19,29 @@ public class Invoice {
 
     private LocalDate date;
 
-    private Integer quantity;
-
-    @ManyToOne
-    @JoinColumn(name = "book_id", referencedColumnName = "id")
-    private Book book;
+    private String address;
+    private String phone;
+    private Integer totalQuantity;
+    private Double totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser appUser;
+    private Integer status;
 
-    public Invoice(Long id, String code, LocalDate now, String quantity, Book book, AppUser user) {
+    public Invoice() {
     }
 
-    public Invoice(Long id, String code, LocalDate date, Integer quantity, Book book, AppUser appUser) {
+    public Invoice(Long id, String code, LocalDate date, String address, String phone, Integer totalQuantity, Double totalPrice, AppUser appUser, Integer status) {
         this.id = id;
         this.code = code;
         this.date = date;
-        this.quantity = quantity;
-        this.book = book;
+        this.address = address;
+        this.phone = phone;
+        this.totalQuantity = totalQuantity;
+        this.totalPrice = totalPrice;
         this.appUser = appUser;
-    }
-
-    public Invoice() {
-
+        this.status = status;
     }
 
     public Long getId() {
@@ -69,20 +68,36 @@ public class Invoice {
         this.date = date;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public String getAddress() {
+        return address;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public Book getBook() {
-        return book;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Integer getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public void setTotalQuantity(Integer totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public AppUser getAppUser() {
@@ -91,5 +106,13 @@ public class Invoice {
 
     public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

@@ -46,4 +46,8 @@ public interface IBookRepository extends JpaRepository<Book, Integer> {
     Page<Book> findAllCategory(Pageable pageable,
                                @Param("category") Integer category,
                                @Param("name") String name);
+
+    @Query("SELECT SUM(b.quantityBook) FROM Book b")
+    Integer countTotalBooks();
+
 }

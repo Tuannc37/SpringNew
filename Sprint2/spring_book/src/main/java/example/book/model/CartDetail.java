@@ -1,6 +1,7 @@
 package example.book.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -13,12 +14,10 @@ public class CartDetail {
     private Integer status;
 
     @ManyToOne
-//    @JsonBackReference("cart-book")
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_id",referencedColumnName = "id")
     private Book book;
 
     @ManyToOne
-    @JsonBackReference("book-cartDetail")
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private AppUser user;
 

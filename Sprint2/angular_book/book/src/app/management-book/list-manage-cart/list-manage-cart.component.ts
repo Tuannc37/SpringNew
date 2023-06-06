@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import {Book} from "../../model/book";
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Title} from "@angular/platform-browser";
 import {BookService} from "../../service/book.service";
 import {ToastrService} from "ngx-toastr";
@@ -8,9 +7,8 @@ import {DataService} from "../../service/data.service";
 import {ShareService} from "../../service/share.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../service/token-storage.service";
-import Swal from "sweetalert2";
-import {CartDetail} from "../../model/cartDetail";
 import {CartSummary} from "../../model/cart-summary";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-list-manage-cart',
@@ -36,6 +34,8 @@ export class ListManageCartComponent implements OnInit {
   currentUser: string;
   isLoggedIn = false;
   carts: any = this.bookService.getCart();
+  @ViewChild('confirmButton') confirmButton: any;
+
 
   constructor(private title: Title,
               private bookService: BookService,
@@ -71,8 +71,6 @@ export class ListManageCartComponent implements OnInit {
   getListManageCart() {
     this.cartService.getListManageCart(this.indexPagination).subscribe((data?: any) => {
       this.totalPage = new Array(data?.totalPages);
-      console.log("AAAAAAAAAAAAAAÂ")
-      console.log(data);
       if (data === null) {
         this.totalPage = new Array(0);
         this.ManageCartList = [];
@@ -124,6 +122,22 @@ export class ListManageCartComponent implements OnInit {
     return formattedValue.slice(0, symbolIndex) + '₫';
   }
 
+  Number(price: string) {
+    return parseFloat(price);
+  }
 
 
+  updateInvoiceStatus(invoiceId: number) {
+    this.cartService.updateInvoiceStatusToPaid(invoiceId)
+      .subscribe(
+        response => {
+          // Xử lý khi gọi API thành công
+          Swal.fire('Xác nhận gửi đơn hàng thành công!');
+          this.getListManageCart();
+        },
+        error => {
+          Swal.fire('Gửi đơn hàng thất bại!');
+        }
+      );
+  }
 }

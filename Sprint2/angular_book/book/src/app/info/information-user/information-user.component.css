@@ -131,3 +131,18 @@ h6 {
   justify-content: center;
   align-items: center;
 }
+
+.row.m-l-0.m-r-0 {
+  background: whitesmoke;
+  border: 1px solid #ff655e;
+}
+
+h4 {
+  color: #5fcf80;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+h6.text-muted.f-w-400 {
+  color: #5fcf80;
+}

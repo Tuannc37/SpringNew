@@ -9,6 +9,8 @@ import {AppUser} from '../model/appUser';
 import Swal from "sweetalert2";
 import {CartService} from "../service/cart.service";
 import {DataService} from "../service/data.service";
+import {CartDetail} from "../model/cartDetail";
+import {RenderParams} from "creditcardpayments/creditCardPayments";
 
 @Component({
   selector: 'app-detail',
@@ -20,6 +22,12 @@ export class DetailComponent implements OnInit {
   bookList: Book [] = [];
   bookForm: FormGroup;
   carts: any = this.bookService.getCart();
+  items: CartDetail[];
+  selected: CartDetail[] = [];
+  totalPrice: number = 0;
+  renderParam?: RenderParams;
+  i: number = 1;
+  quantity: number;
 
   constructor(private title: Title,
               private bookService: BookService,
@@ -56,28 +64,24 @@ export class DetailComponent implements OnInit {
     });
   }
 
-  // onAddToCart(book: any) {
-  //   const index = this.carts.findIndex((item: any) => {
-  //     return item.id === book.id;
-  //   });
-  //
-  //   if (index >= 0) {
-  //     this.carts[index].quantity += 1;
-  //   } else {
-  //     const cartItem: any = {
-  //       id: book.id,
-  //       name: book.name,
-  //       price: book.price,
-  //       quantity: 1,
-  //       image: book.image,
-  //     };
-  //     this.carts.push(cartItem);
-  //   }
-  //
-  //   this.cartService.saveCart(this.carts);
-  //   this.dataService.changeData({
-  //     quantity: this.cartService.getTotalQuantity()
-  //   });
-  //   Swal.fire('Thông Báo !!', 'Thêm Vào Giỏ Hàng Thành Công', 'success').then();
-  // }
+
+  addToCart(id: number) {
+    this.cartService.addToCart(id).subscribe(data => {
+      Swal.fire('Thông Báo !!', 'Thêm Vào Giỏ Hàng Thành Công', 'success').then();
+      this.cartService.getCartItems().subscribe(items => {
+        this.dataService.changeCartItemsAmount(items.length)
+      })
+    })
+  }
+
+  decrease() {
+    if (this.i > 1) {
+      this.i--;
+    }
+  }
+
+  increase() {
+    this.i++;
+  }
+  
 }

@@ -1,9 +1,11 @@
 package example.book.service.impl;
 
 import example.book.dto.CartSummary;
+import example.book.model.AppUser;
 import example.book.model.CartDetail;
 import example.book.model.Invoice;
 import example.book.repository.ICartDetailRepository;
+import example.book.repository.UserRepository;
 import example.book.service.ICartDetailService;
 import example.book.service.IInvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class CartDetailService implements ICartDetailService {
     @Autowired
     private IInvoiceService iInvoiceService;
 
+    @Autowired
+    UserService userService;
 
     @Override
     public List<CartDetail> getCartDetails(String username) {
@@ -68,17 +72,44 @@ public class CartDetailService implements ICartDetailService {
 
     @Override
     public void update(List<CartDetail> cartDetails) {
+        for (CartDetail cartDetail : cartDetails) {
+            if (cartDetail.getUser() == null) {
+                AppUser user = userService.findByIdUser(cartDetail.getId());
+                cartDetail.setUser(user);
+            }
+        }
         cartDetailRepository.saveAll(cartDetails);
     }
 
+
     @Override
     public void pay(List<CartDetail> cartDetails) {
-        List<CartDetail> paidItems =  this.cartDetailRepository.saveAll(cartDetails);
-        List<Invoice> invoices = paidItems.stream().map(item ->
-                new Invoice(null,
-                        "HD-" + item.getUser().getId() + "-" + item.getId(),
-                        LocalDate.now(),item.getQuantity(), item.getBook(),item.getUser())).collect(Collectors.toList());
-        this.iInvoiceService.saveAll(invoices);
+        List<CartDetail> paidItems = this.cartDetailRepository.saveAll(cartDetails);
+
+        if (!paidItems.isEmpty()) {
+            Invoice invoice = new Invoice();
+            CartDetail firstItem = paidItems.get(0);
+
+            invoice.setAddress(firstItem.getUser().getAddress());
+            invoice.setPhone(firstItem.getUser().getPhone());
+
+            Double totalPrice = 0.0;
+            Integer totalQuantity = 0;
+
+            for (CartDetail item : paidItems) {
+                totalPrice += Double.parseDouble(item.getBook().getPrice()) * item.getQuantity();
+                totalQuantity += item.getQuantity();
+            }
+
+            invoice.setTotalQuantity(totalQuantity);
+            invoice.setTotalPrice(totalPrice);
+            invoice.setAppUser(firstItem.getUser());
+            invoice.setCode("HD-" + firstItem.getUser().getId() + "-" + firstItem.getId());
+            invoice.setDate(LocalDate.now());
+            invoice.setStatus(0);
+
+            this.iInvoiceService.saveAll(invoice);
+        }
     }
 
     @Override
@@ -90,11 +121,6 @@ public class CartDetailService implements ICartDetailService {
     public Integer getTotalQuantityByUserId(Integer idUser) {
         Integer totalQuantity = cartDetailRepository.getTotalQuantityByUserId(idUser);
         return totalQuantity;
-    }
-
-    @Override
-    public Page<CartSummary> getCartSummary(Pageable pageable) {
-        return cartDetailRepository.getCartSummary(pageable);
     }
 
 

@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import {Book} from "../model/book";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {CartService} from "../service/cart.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-header',
@@ -30,6 +31,7 @@ export class HeaderComponent implements OnInit {
   totalElements = 0;
   name: string;
   searchForm: any;
+  totalQuantitySubscription: Subscription;
 
 
   constructor(private tokenStorageService: TokenStorageService,
@@ -51,21 +53,15 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadHeader();
-    this.loadTotalQuantity();
+    this.totalQuantitySubscription = this.cartService.getTotalQuantityObservable().subscribe(
+      totalQuantity => {
+        this.totalQuantity = totalQuantity;
+      }
+    );
     this.category.getCategory().subscribe(next => {
       this.categoryList = next;
     });
 
-  }
-  loadTotalQuantity(): void {
-    this.cartService.getTotalQuantity().subscribe(
-      totalQuantity => {
-        this.totalQuantity = totalQuantity;
-      },
-      error => {
-        this.totalQuantity = 0;
-      }
-    );
   }
 
   getId(id: number) {
@@ -77,6 +73,17 @@ export class HeaderComponent implements OnInit {
       this.currentUser = this.tokenStorageService.getUser().username;
       this.role = this.tokenStorageService.getUser().roles[0];
       this.username = this.tokenStorageService.getUser().username;
+
+      if (this.role === 'ROLE_USER') {
+        this.cartService.getTotalQuantity().subscribe(
+          totalQuantity => {
+            this.totalQuantity = totalQuantity;
+          },
+          error => {
+            this.totalQuantity = 0;
+          }
+        );
+      }
     }
     this.isLoggedIn = this.username != null;
   }
@@ -90,4 +97,9 @@ export class HeaderComponent implements OnInit {
     const name = this.searchForm.value.name;
     this.route.navigate(['listSearch'], { queryParams: { name: name } });
   }
+
+  ngOnDestroy(): void {
+    this.totalQuantitySubscription.unsubscribe();
+  }
+
 }

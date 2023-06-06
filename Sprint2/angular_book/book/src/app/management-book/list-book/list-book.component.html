@@ -18,7 +18,7 @@
                               <a class=" btn btn-outline-success" [routerLink]="['/create']">Thêm mới</a>
                             </div>
                             <div class="col-3 mx-auto me-0" style="display: flex; width: 350px">
-                              <input formControlName="name" class="form-control bg-transparent me-2  "
+                              <input style="color: white;" formControlName="name" class="form-control bg-transparent me-2  "
                                      type="search" placeholder="Tìm tên sách hoặc tên loại sách..">
                               <button class="btn btn-outline-success" type="submit" style="width: 130px" >
                                 Tìm kiếm
@@ -65,10 +65,54 @@
                     </tr>
                     </tbody>
                   </table>
+
+                  <div style="height: 50px;position: relative" class="container pagination-advertisement mb-3">
+                    <ul class="pagination justify-content-end" style="text-align: right">
+                      <li>
+                      <li style="margin-top: -22px;" class="page-item">
+                              <span style="margin: 0 20px 0 20px">{{pageSize * indexPagination + 1}}
+                                - {{pageSize * indexPagination + numberOfElement}} / {{totalElements}}</span>
+                        <button (click)="previousPage($event)" [ngStyle]="{'display':previousPageStyle}" type="button"
+                                class="btn btn-outline-primary">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                               class="bi bi-chevron-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                          </svg>
+                        </button>
+                        <button (click)="nextPage($event)" [ngStyle]="{'display':nextPageStyle}" style="margin-left: 10px"
+                                type="button"
+                                class="btn btn-outline-primary">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                               class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                          </svg>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xoá sách</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h4>Bạn có muốn xoá tên sách  : {{name}} không?</h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+          <button type="button" class="btn btn-danger" (click)="delete(id)" data-bs-dismiss="modal" >Xoá</button>
         </div>
       </div>
     </div>

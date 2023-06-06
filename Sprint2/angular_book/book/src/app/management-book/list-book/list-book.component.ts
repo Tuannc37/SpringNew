@@ -15,8 +15,6 @@ import Swal from "sweetalert2";
 })
 export class ListBookComponent implements OnInit {
 
-  categorySearch = '';
-  nameSearch = '';
   bookList: Book [] = [];
   categoryList: Category [] = [];
   number: number;

@@ -24,3 +24,6 @@ tbody td {
 .card {
   border-radius: .5rem;
 }
+ul.pagination.justify-content-center {
+  color: white;
+}

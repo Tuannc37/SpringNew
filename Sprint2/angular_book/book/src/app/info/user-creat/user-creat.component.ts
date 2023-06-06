@@ -4,6 +4,7 @@ import {BookService} from "../../service/book.service";
 import {Router} from "@angular/router";
 import {AppUser} from "../../model/appUser";
 import {ToastrService} from "ngx-toastr";
+import {TokenStorageService} from "../../service/token-storage.service";
 
 @Component({
   selector: 'app-user-creat',
@@ -16,7 +17,13 @@ export class UserCreatComponent implements OnInit {
 
   appUser: AppUser;
 
+  username: string;
+
   errorList: any;
+
+  currentUser: string;
+  role: string;
+  isLoggedIn = false;
 
   validationMessages = {
     username: [
@@ -57,6 +64,7 @@ export class UserCreatComponent implements OnInit {
 
   constructor(private bookService: BookService,
               private toastr: ToastrService,
+              private tokenStorageService: TokenStorageService,
               private router: Router) {
     this.appUser = new AppUser();
     this.registerUser = new FormGroup({
@@ -80,12 +88,14 @@ export class UserCreatComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadHeader();
   }
 
   save() {
     if (this.registerUser.valid){
       let appUser1: AppUser = this.registerUser.value;
       appUser1.password = this.registerUser.controls.passwordGroup.get('password').value;
+      appUser1.role = 'ROLE_USER';
       this.bookService.saveUser(appUser1).subscribe(next => {
         this.router.navigateByUrl("/login")
         this.toastr.success('Chúc mừng.Bạn đã đăng ký thành công!', 'Thông báo', {
@@ -109,6 +119,15 @@ export class UserCreatComponent implements OnInit {
       return {'checkPasswordConfirm': true};
     }
     return null;
+  }
+
+  loadHeader(): void {
+    if (this.tokenStorageService.getToken()) {
+      this.currentUser = this.tokenStorageService.getUser().username;
+      this.role = this.tokenStorageService.getUser().roles[0];
+
+    }
+    this.isLoggedIn = this.username != null;
   }
 
 }

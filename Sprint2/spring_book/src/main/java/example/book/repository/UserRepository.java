@@ -1,6 +1,8 @@
 package example.book.repository;
 
 import example.book.model.AppUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,7 +32,7 @@ public interface UserRepository extends JpaRepository<AppUser, Integer> {
     void deleteUser(@Param("id") int id);
 
     @Query(value = "select * from app_user", nativeQuery = true)
-    List<AppUser> findAll();
+    Page<AppUser> findAll(Pageable pageable);
 
     @Modifying
     @Query(value = "insert into app_user (username, `password`, email, creation_date, is_deleted) values (:username, :password, :email, current_date(), 0)", nativeQuery = true)
@@ -51,4 +53,9 @@ public interface UserRepository extends JpaRepository<AppUser, Integer> {
     String existsEmail(@Param("email") String email);
 
 
+    @Query("SELECT u FROM AppUser u WHERE u.id = :id")
+    AppUser findByIdUser(Integer id);
+
+    @Query("SELECT COUNT(u) FROM AppUser u")
+    Integer countTotalUsers();
 }

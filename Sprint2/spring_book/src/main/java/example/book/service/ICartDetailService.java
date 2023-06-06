@@ -24,5 +24,4 @@ public interface ICartDetailService {
 
     Integer getTotalQuantityByUserId(Integer idUser);
 
-    Page<CartSummary> getCartSummary(Pageable pageable);
 }

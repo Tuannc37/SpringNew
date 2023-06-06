@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RequestMapping("/api/public/book")
@@ -240,6 +239,21 @@ public class BookController {
         } else {
             return new ResponseEntity<>(appUser, HttpStatus.OK);
         }
+    }
+
+
+    @GetMapping("/list/userAll")
+    public ResponseEntity<Page<AppUser>> getAllUser(@PageableDefault(value = 6) Pageable pageable) {
+        Page<AppUser> users = userService.findAllUser(pageable);
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/total")
+    public Integer countTotalBooks() {
+        return bookService.countTotalBooks();
     }
 
 }

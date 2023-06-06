@@ -59,6 +59,7 @@ export class LoginComponent implements OnInit {
       this.user = this.tokenStorageService.getUser().username;
     }
   }
+
   loadHeader(): void {
     if (this.tokenStorageService.getToken()) {
       this.user = this.tokenStorageService.getUser().username;
@@ -90,6 +91,7 @@ export class LoginComponent implements OnInit {
       this.roles = this.tokenStorageService.getUser().roles;
       this.formGroup.reset();
       this.router.navigateByUrl(this.returnUrl);
+      this.router.navigateByUrl('');
       Swal.fire({
         title: 'Thông Báo!',
         text: 'Đăng Nhập Thành Công',
@@ -97,6 +99,7 @@ export class LoginComponent implements OnInit {
         confirmButtonText: 'OK'
       });
       this.shareService.sendClickEvent();
+
     }, err => {
       this.authService.isLoggedIn = false;
       this.toastr.error('Sai tên đăng nhập hoặc mật khẩu hoặc tài khoản chưa được kích hoạt', 'Đăng nhập thất bại: ', {
@@ -105,30 +108,6 @@ export class LoginComponent implements OnInit {
       });
     });
   }
-
-  // onSubmit() {
-  //   this.authService.login(this.formGroup.value).subscribe(loginResponse => {
-  //     this.loginResponse = loginResponse;
-  //     if (this.rememberMe){
-  //       this.tokenStorageService.localStorageSave(loginResponse);
-  //     }else {
-  //       this.tokenStorageService.sessionStorageSave(loginResponse);
-  //     }
-  //     this.authService.isLoggedIn = true;
-  //     this.username = this.tokenStorageService.getUsername();
-  //     this.roles = this.tokenStorageService.getUser().roles;
-  //     this.formGroup.reset();
-  //     this.getCartItems()
-  //     this.router.navigateByUrl(this.returnUrl);
-  //     this.toastr.success('Chào ' + loginResponse.name,'Đăng nhập thành công',{
-  //       positionClass: 'toast-top-center'
-  //     })
-  //   }, error => {
-  //     this.toastr.error('Tài khoản hoặc mật khẩu không đúng !!!', 'Đăng nhập thất bại',{
-  //       positionClass: 'toast-top-center'
-  //     })
-  //   } )
-  // }
 
   getCartItems(){
     this.cartService.getCartItems().subscribe(amount => {

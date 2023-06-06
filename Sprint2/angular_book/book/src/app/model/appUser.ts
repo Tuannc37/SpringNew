@@ -10,8 +10,9 @@ export class AppUser {
   creationDate: string;
   phone: string;
   address: string;
-  fullName: string;
+  fullName?: string;
   cartDetail: CartDetail;
   customer: Customer;
   userRoles: UserRole;
+  role: string;
 }

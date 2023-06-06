@@ -13,6 +13,7 @@ import {AppUser} from "../model/appUser";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CartDetail} from "../model/cartDetail";
 import {ToastrService} from "ngx-toastr";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -27,16 +28,16 @@ export class CartComponent implements OnInit {
   user: any;
   username: any;
   currentDate: Date;
-  transportFee: any = 20000;
-  totalAmount: number = 0;
   userUpdateForm: FormGroup;
+  itemsLength: number;
   id: number;
   userSelected: any = null;
   items: CartDetail[];
   selected: CartDetail[] = [];
   totalPrice: number = 0;
   renderParam?: RenderParams;
-  totalQuantity: any = 0;
+  totalQuantitySubscription: Subscription;
+  totalQuantity: number = 0;
 
 
   constructor(private cartService: CartService,
@@ -50,30 +51,30 @@ export class CartComponent implements OnInit {
               private title: Title) {
     this.title.setTitle('Giỏ Hàng');
     this.currentDate = new Date();
+
   }
 
   ngOnInit(): void {
-    this.getCartItems();
-    this.loadTotalQuantity();
     this.loadHeader();
-    this.bookService.getUser(this.username).subscribe(next => {
-      this.user = next;
-      console.log(next);
-
-    });
     this.userForm();
-    this.bookService.getUser(this.username).subscribe(
-      (user) => {
-        if (user && user.id) {
-          this.user = user;
-          this.getUser(this.user.id);
-        }
-      },
-      (error) => {
-        console.log(error);
+
+    this.cartService.getCartItems().subscribe(items => {
+      this.itemsLength = items.length;
+      this.getCartItems();
+    });
+
+    this.totalQuantitySubscription = this.cartService.getTotalQuantityObservable().subscribe(
+      totalQuantity => {
+        this.totalQuantity = totalQuantity;
       }
     );
 
+    this.bookService.getUser(this.username).subscribe(user => {
+      if (user && user.id) {
+        this.user = user;
+        this.getUser(this.user.id);
+      }
+    });
   }
 
   getUser(id) {
@@ -83,54 +84,24 @@ export class CartComponent implements OnInit {
     });
   }
 
-  payment(){
+  payment() {
     document.getElementById('paypal').innerHTML = "";
-    this.renderParam = {
+    render({
       id: '#paypal',
       currency: 'USD',
-      value: String(((this.totalAmount) / 23000).toFixed(2)),
+      value: String(((this.totalPrice) / 23000).toFixed(2)),
       onApprove: details => {
         this.cartService.updateAll(this.items).subscribe();
         this.selected.map(item => item.status = 0)
         this.cartService.pay(this.selected).subscribe(ok => {
           this.getCartItems();
         });
-
         Swal.fire('Thanh toán','Thanh toán thành công, hãy kiểm tra đơn hàng của bạn','success')
+        window.location.reload();
       }
-    }
-  }
+    });
 
-  // payment() {
-  //   document.getElementById('paypal').innerHTML = "";
-  //   const username = this.tokenStorageService.getUser().username;
-  //   render({
-  //     id: '#paypal',
-  //     currency: 'USD',
-  //     value: String(((this.totalAmount) / 23000).toFixed(2)),
-  //     onApprove: () => {
-  //       for (const item of this.carts) {
-  //         item.book = {
-  //           id: item.id
-  //         };
-  //       }
-  //       this.cartDetailService.saveCartDetail(username, this.carts).subscribe();
-  //       Swal.fire('Thông Báo !!', 'Thanh Toán Thành Công. <br>Sách Của Bạn Sẽ Được Giao Trong Vòng 3 Ngày Tới', 'success').then();
-  //       this.carts = [];
-  //       this.cartService.updateAll(this.carts);
-  //     }
-  //   });
-  // }
 
-  loadTotalQuantity(): void {
-    this.cartService.getTotalQuantity().subscribe(
-      totalQuantity => {
-        this.totalQuantity = totalQuantity;
-      },
-      error => {
-        this.totalQuantity = 0;
-      }
-    );
   }
 
   loadHeader(): void {
@@ -162,8 +133,13 @@ export class CartComponent implements OnInit {
     }, e => console.log(e));
   }
 
+
   openModal(user: any) {
-    this.userSelected = user;
+    if (this.selected.length === 0) {
+      Swal.fire('Không có sản phẩm được chọn. Vui lòng chọn ít nhất một sản phẩm trước khi thanh toán. !');
+      return;
+    }
+    this.openModal(user);
   }
 
   getCartItems() {
@@ -179,6 +155,7 @@ export class CartComponent implements OnInit {
     } else {
       this.selected.push(item);
     }
+    this.totalQuantity = this.calculateTotalQuantity();
     this.totalPrice = 0;
     let hasSelectedItems = false;
     this.selected.forEach(book => {
@@ -186,34 +163,35 @@ export class CartComponent implements OnInit {
       hasSelectedItems = true;
     });
 
-    if (!hasSelectedItems) {
-      this.totalAmount = 0;
-    } else {
-      this.totalAmount = this.totalPrice - 20000;
+    if (this.renderParam) {
+      this.renderParam.value = String(this.totalPrice);
     }
-    this.renderParam.value = String((this.totalPrice * 0.000042).toFixed(2));
   }
 
   increase(i: number) {
     this.items[i].quantity = this.items[i].quantity + 1;
+    this.totalQuantity = this.calculateTotalQuantity();
     this.totalPrice = 0;
     this.selected.forEach(book => {
       this.totalPrice += book.quantity * parseFloat(book.book.price);
-      this.totalAmount = this.totalPrice - 20000;
     });
-    this.renderParam.value = String((this.totalPrice * 0.000042).toFixed(2));
+    if (this.renderParam) {
+      this.renderParam.value = String(this.totalPrice);
+    }
   }
 
   decrease(i: number) {
     if (this.items[i].quantity > 1) {
       this.items[i].quantity = this.items[i].quantity - 1;
+      this.totalQuantity = this.calculateTotalQuantity();
     }
     this.totalPrice = 0;
     this.selected.forEach(book => {
       this.totalPrice +=  book.quantity * parseFloat(book.book.price);
-      this.totalAmount = this.totalPrice - 20000;
     });
-    this.renderParam.value = String((this.totalPrice * 0.000042).toFixed(2));
+    if (this.renderParam) {
+      this.renderParam.value = String(this.totalPrice);
+    }
   }
 
   callToast(item: CartDetail) {
@@ -226,38 +204,31 @@ export class CartComponent implements OnInit {
       showCancelButton: true,
     }).then(result => {
       this.cartService.delete(item).subscribe(ok => {
+        this.totalQuantity = this.calculateTotalQuantity();
         this.cartService.getCartItems().subscribe(items => {
           this.items = items;
         });
         this.dataService.changeCartItemsAmount(this.items.length);
-        this.toast.success('Xóa thành công');
+        this.toast.success('Xóa khỏi giỏ hàng thành công!');
+        window.location.reload();
       });
     });
   }
 
   ngOnDestroy(): void {
     this.cartService.updateAll(this.items).subscribe();
-  }
-
-  increaseQuantity(i: number) {
-    this.items[i].quantity = this.items[i].quantity + 1;
-    this.totalQuantity = this.calculateTotalQuantity();
-  }
-
-  decreaseQuantity(i: number) {
-    if (this.items[i].quantity > 1) {
-      this.items[i].quantity = this.items[i].quantity - 1;
-      this.totalQuantity = this.calculateTotalQuantity();
+    if (this.totalQuantitySubscription) {
+      this.totalQuantitySubscription.unsubscribe();
     }
   }
 
   calculateTotalQuantity(): number {
     let totalQuantity = 0;
-    this.selected.forEach(book => {
-      totalQuantity += book.quantity;
+    this.selected.forEach(item => {
+      totalQuantity += item.quantity;
     });
+
     return totalQuantity;
   }
-
 
 }

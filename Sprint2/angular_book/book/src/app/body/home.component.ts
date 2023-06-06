@@ -11,6 +11,7 @@ import {TokenStorageService} from '../service/token-storage.service';
 import {ShareService} from '../service/share.service';
 import {CartService} from "../service/cart.service";
 import {DataService} from "../service/data.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -43,6 +44,7 @@ export class HomeComponent implements OnInit {
   constructor(private title: Title,
               private bookService: BookService,
               private toast: ToastrService,
+              private route: Router,
               private tokenStorageService: TokenStorageService,
               private cartService: CartService,
               private dataService: DataService,
@@ -52,6 +54,7 @@ export class HomeComponent implements OnInit {
     });
     this.title.setTitle('Trang chủ');
   }
+
   loadHeader(): void {
     if (this.tokenStorageService.getToken()) {
       this.currentUser = this.tokenStorageService.getUser().username;
@@ -138,12 +141,12 @@ export class HomeComponent implements OnInit {
 
   addToCart(id: number) {
     this.cartService.addToCart(id).subscribe(data => {
-      console.log("Dataaaaaa:"+ data);
       Swal.fire('Thông Báo !!', 'Thêm Vào Giỏ Hàng Thành Công', 'success').then();
       this.cartService.getCartItems().subscribe(items => {
         this.dataService.changeCartItemsAmount(items.length)
       })
     })
+
   }
 
 
@@ -156,4 +159,5 @@ export class HomeComponent implements OnInit {
   Number(price: string) {
     return parseFloat(price);
   }
+
 }

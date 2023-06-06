@@ -2,7 +2,7 @@
 <div class="container-fluid">
   <div class="row" style="margin-top: 80px ; margin-bottom: 50px">
     <div class="container-fluid">
-      <div class="row px-xl-5" *ngIf="items.length > 0">
+      <div class="row px-xl-5" *ngIf="itemsLength > 0">
         <div class="col-9">
           <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="fw-normal mb-0">DANH SÁCH GIỎ HÀNG</h4>
@@ -75,20 +75,20 @@
             <div class="pt-2">
               <div class="d-flex justify-content-between mt-2">
                 <h6>Miễn phí vận chuyển:</h6>
-                <h6><b style="color: #00BCD4;" class=" text-danger me-2">- {{addCurrencySymbol(transportFee)}}</b></h6>
+                <h6><b style="color: #00BCD4;" class=" text-danger me-2">- 0 đ</b></h6>
               </div>
             </div>
             <div class="pt-2">
               <div class="d-flex justify-content-between mt-2">
                 <h6>Tổng cộng:</h6>
-                <h6><b style="color: #0d0e0e;font-weight: 600" class=" me-2">{{addCurrencySymbol(totalAmount)}}</b></h6>
+                <h6><b style="color: #0d0e0e;font-weight: 600" class=" me-2">{{addCurrencySymbol(totalPrice)}}</b></h6>
               </div>
             </div>
             <div class="d-flex justify-content-evenly mt-4">
               <a routerLink="">
                 <button class="btn btn-success">Tiếp tục mua sắm</button>
               </a>
-              <button (click)="openModal(user)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <button (click)="openModal(user)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" [disabled]="selected.length === 0">
                 Thanh toán
               </button>
             </div>
@@ -121,7 +121,7 @@
                   <label style="font-weight: 700;" for = "address">Địa chỉ cụ thể:</label>
                   <input type = "text" class = "form-control" id = "address" formControlName="address" >
                 </div>
-                <p class="mt-4">Số tiền cần phải thanh toán là: <span style="font-weight: bold;color: #0d0e0e">{{addCurrencySymbol(totalAmount)}}</span></p>
+                <p class="mt-4">Số tiền cần phải thanh toán là: <span style="font-weight: bold;color: #0d0e0e">{{addCurrencySymbol(totalPrice)}}</span></p>
 
               </div>
               <div class="modal-footer">
@@ -135,7 +135,7 @@
         </form>
       </div>
 
-      <div *ngIf="items.length == 0">
+      <div *ngIf="itemsLength == 0">
         <div class="container">
           <div class="row">
             <div class="py-6 py-lg-12">

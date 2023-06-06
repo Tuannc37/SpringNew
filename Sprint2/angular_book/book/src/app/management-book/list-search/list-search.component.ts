@@ -165,29 +165,13 @@ export class ListSearchComponent implements OnInit {
     return parseFloat(price);
   }
 
-  // onAddToCart(book: any) {
-  //   const index = this.carts.findIndex((item: any) => {
-  //     return item.id === book.id;
-  //   });
-  //
-  //   if (index >= 0) {
-  //     this.carts[index].quantity += 1;
-  //   } else {
-  //     const cartItem: any = {
-  //       id: book.id,
-  //       name: book.name,
-  //       price: book.price,
-  //       quantity: 1,
-  //       image: book.image,
-  //     };
-  //     this.carts.push(cartItem);
-  //   }
-  //
-  //   this.cartService.saveCart(this.carts);
-  //   this.dataService.changeData({
-  //     quantity: this.cartService.getTotalQuantity()
-  //   });
-  //   Swal.fire('Thông Báo !!', 'Thêm Vào Giỏ Hàng Thành Công', 'success').then();
-  // }
+  addToCart(id: number) {
+    this.cartService.addToCart(id).subscribe(data => {
+      Swal.fire('Thông Báo !!', 'Thêm Vào Giỏ Hàng Thành Công', 'success').then();
+      this.cartService.getCartItems().subscribe(items => {
+        this.dataService.changeCartItemsAmount(items.length)
+      })
+    })
+  }
 
 }

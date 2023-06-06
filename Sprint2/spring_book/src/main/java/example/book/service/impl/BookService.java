@@ -15,6 +15,7 @@ import java.util.Optional;
 public class BookService implements IBookService {
     @Autowired
     private IBookRepository repository;
+
     @Override
     public Page<Book> findAllBook(Pageable pageable, String name,String category) {
         return repository.findAllBook(pageable,"%" +name + "%","%" + category +"%");
@@ -37,7 +38,7 @@ public class BookService implements IBookService {
 
     @Override
     public void deleteBook(Integer id) {
-       repository.deleteBook(id);
+       repository.deleteById(id);
     }
 
     @Override
@@ -78,6 +79,11 @@ public class BookService implements IBookService {
     @Override
     public Page<Book> findAllByPriceLessThanOrEqual(Pageable pageable, String name) {
         return repository.findAllByPriceLessThanOrEqual(name,pageable);
+    }
+
+    @Override
+    public Integer countTotalBooks() {
+        return repository.countTotalBooks();
     }
 
 }
