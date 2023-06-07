@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {AuthService} from '../../service/auth.service';
 import {ToastrService} from 'ngx-toastr';
@@ -48,6 +48,7 @@ export class VerityResetPasswordComponent implements OnInit {
       }
     });
   }
+  
 
   onSubmit() {
     if (this.formGroup.value.newPassword !== '' && this.formGroup.value.repeatNewPassword !== '') {

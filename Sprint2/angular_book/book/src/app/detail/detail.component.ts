@@ -83,5 +83,5 @@ export class DetailComponent implements OnInit {
   increase() {
     this.i++;
   }
-  
+
 }

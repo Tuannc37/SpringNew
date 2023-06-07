@@ -36,10 +36,6 @@ public class AppUser {
     @JsonIgnore
     private Set<CartDetail> cartDetails;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "appUser")
-    private Customer customer;
-
     @OneToMany(mappedBy = "appUser")
     @JsonIgnore
     private List<UserRole> userRoles;
@@ -47,7 +43,7 @@ public class AppUser {
     public AppUser() {
     }
 
-    public AppUser(Integer id, String username, String password, String email, LocalDate creationDate, String phone, String address, String fullName, Integer status, Set<CartDetail> cartDetails, Customer customer, List<UserRole> userRoles) {
+    public AppUser(Integer id, String username, String password, String email, LocalDate creationDate, String phone, String address, String fullName, Integer status, Set<CartDetail> cartDetails, List<UserRole> userRoles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -58,7 +54,6 @@ public class AppUser {
         this.fullName = fullName;
         this.status = status;
         this.cartDetails = cartDetails;
-        this.customer = customer;
         this.userRoles = userRoles;
     }
 
@@ -140,14 +135,6 @@ public class AppUser {
 
     public void setCartDetails(Set<CartDetail> cartDetails) {
         this.cartDetails = cartDetails;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 
     public List<UserRole> getUserRoles() {

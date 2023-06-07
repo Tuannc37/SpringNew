@@ -118,7 +118,7 @@
                     <h5 style="color: #5fcf80;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><a href="#">{{book.name}}</a></h5>
                     <div style="display: flex;justify-content: space-around;">
                       <div class="price__cost" style="text-decoration: line-through;">
-                        {{addCurrencySymbol(book.price/book.sale*100)}}
+                        {{addCurrencySymbol(Number(book.price) + book.price*book.sale/100)}}
                       </div>
                       <div class="price__sale" style="color: red">
                         {{addCurrencySymbol(Number(book.price))}}
@@ -196,7 +196,7 @@
                     <h5 style="color: #5fcf80;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><a href="#">{{book.name}}</a></h5>
                     <div style="display: flex;justify-content: space-around;">
                       <div class="price__cost" style="text-decoration: line-through;">
-                        {{addCurrencySymbol(book.price/book.sale*100)}}
+                        {{addCurrencySymbol(Number(book.price) + book.price*book.sale/100)}}
                       </div>
                       <div class="price__sale" style="color: red">
                         {{addCurrencySymbol(Number(book.price))}}
@@ -270,7 +270,7 @@
                     <h5 style="color: #5fcf80;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><a href="#">{{item.name}}</a></h5>
                     <div style="display: flex;justify-content: space-around;">
                       <div class="price__cost" style="text-decoration: line-through;">
-                        {{addCurrencySymbol(item.price/item.sale*100)}}
+                        {{addCurrencySymbol(Number(item.price) + item.price*item.sale/100)}}
                       </div>
                       <div class="price__sale" style="color: red">
                         {{addCurrencySymbol(Number(item.price))}}

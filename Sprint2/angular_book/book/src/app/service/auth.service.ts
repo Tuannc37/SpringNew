@@ -32,13 +32,13 @@ export class AuthService {
   }
 
   resetPassword(username: string): Observable<any> {
-    return this.httpClient.post(AUTH_API + 'reset-password', {
+    return this.httpClient.post(AUTH_API + '/reset-password', {
       username: username,
     }, this.httpOptions);
   }
 
   doResetPassword(password: string, name: string): Observable<any> {
-    return this.httpClient.post(AUTH_API + 'do-reset-password/' + name, {
+    return this.httpClient.post(AUTH_API + '/do-reset-password/' + name, {
       password: password
     }, this.httpOptions);
   }

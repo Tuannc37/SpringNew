@@ -59,24 +59,24 @@
               <div class="mt-4">
                 <input type="hidden" name="product-title" value="Activewear">
                 <div class="row">
-                  <div class="col-auto">
-                    <ul class="list-inline pb-3">
-                      <li style="color: #EBA850;font-weight: 800" class="list-inline-item text-right">
-                        Số lượng:
-                        <input type="hidden" name="product-quanity" id="product-quanity" [value]="i">
-                      </li>
-                      <li (click)="decrease()" class="list-inline-item"><button style="background-color: #5fcf80" class="btn">-</button></li>
-                      <li class="list-inline-item"><button class="btn btn-success bg-secondary">{{i}}</button></li>
-                      <li (click)="increase()" class="list-inline-item"><button style="background-color: #5fcf80" class="btn">+</button></li>
-                    </ul>
-                  </div>
+<!--                  <div class="col-auto">-->
+<!--                    <ul class="list-inline pb-3">-->
+<!--                      <li style="color: #EBA850;font-weight: 800" class="list-inline-item text-right">-->
+<!--                        Số lượng:-->
+<!--                        <input type="hidden" name="product-quanity" id="product-quanity" [value]="i">-->
+<!--                      </li>-->
+<!--                      <li (click)="decrease()" class="list-inline-item"><button style="background-color: #5fcf80" class="btn">-</button></li>-->
+<!--                      <li class="list-inline-item"><button class="btn btn-success bg-secondary">{{i}}</button></li>-->
+<!--                      <li (click)="increase()" class="list-inline-item"><button style="background-color: #5fcf80" class="btn">+</button></li>-->
+<!--                    </ul>-->
+<!--                  </div>-->
                 </div>
                 <div class="row pb-3">
+<!--                  <div class="col d-grid">-->
+<!--                    <button type="submit"  style="background-color: #5fcf80 ;font-weight: 800" class="btn text-muted" name="submit" value="buy">Mua ngay</button>-->
+<!--                  </div>-->
                   <div class="col d-grid">
-                    <button type="submit"  style="background-color: #5fcf80 ;font-weight: 800" class="btn text-muted" name="submit" value="buy">Mua ngay</button>
-                  </div>
-                  <div class="col d-grid">
-                    <button (click)="addToCart(bookForm.value.id)" type="submit"   style="background-color: #5fcf80;font-weight: 800" class="btn text-muted" name="submit" value="addtocard">Thêm vào giỏ hàng
+                    <button  (click)="addToCart(bookForm.value.id)" type="submit"   style="background-color: #5fcf80;font-weight: 800;width: 30%;" class="btn text-muted" name="submit" value="addtocard">Thêm vào giỏ hàng
                     </button>
                   </div>
                 </div>

@@ -1,30 +1,20 @@
 package example.book.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import example.book.model.CartDetail;
-import example.book.model.Customer;
 import example.book.model.UserRole;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
 public class UserDto implements Validator {
     private Integer id;
-//    @NotBlank(message = "Username không được để trống.")
+
     private String username;
 
-//    @NotBlank(message = "Password không được để trống.")
-//    @Size(min = 6, message = "Password phải có ít nhất 6 kí tự.")
     private String password;
 
-//    @NotBlank(message = "Email không được để trống.")
-//    @Email(message = "Email không đúng định dạng.")
     private String email;
 
     private LocalDate creationDate;
@@ -35,14 +25,13 @@ public class UserDto implements Validator {
     private Integer status =0;
 
     private CartDetail cartDetail;
-    private Customer customer;
 
     private List<UserRole> userRoles;
 
     public UserDto() {
     }
 
-    public UserDto(Integer id, String username, String password, String email, LocalDate creationDate, String phone, String address, String fullName, Integer status, CartDetail cartDetail, Customer customer, List<UserRole> userRoles) {
+    public UserDto(Integer id, String username, String password, String email, LocalDate creationDate, String phone, String address, String fullName, Integer status, CartDetail cartDetail, List<UserRole> userRoles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -53,7 +42,6 @@ public class UserDto implements Validator {
         this.fullName = fullName;
         this.status = status;
         this.cartDetail = cartDetail;
-        this.customer = customer;
         this.userRoles = userRoles;
     }
 
@@ -135,14 +123,6 @@ public class UserDto implements Validator {
 
     public void setCartDetail(CartDetail cartDetail) {
         this.cartDetail = cartDetail;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 
     public List<UserRole> getUserRoles() {

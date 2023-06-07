@@ -1945,3 +1945,9 @@ footer a:hover {
   margin-bottom: 20px;
 }
 
+.price__cost {
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
